@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 
 import { Request, Response } from "express";
 import carService from "../services/carService.js";
+import { Car } from "../protocols/carsProtocols.js";
 
 async function getAllCars(req: Request, res: Response) {
   try {
@@ -26,10 +27,16 @@ async function getSpecificCar(req: Request, res: Response) {
 }
 
 async function createCar(req: Request, res: Response) {
-  const { model, licensePlate, year, color } = req.body;
+  const { model, licensePlate, year, color } = req.body as Car;
 
+  const car: Car = {
+    model: model,
+    licensePlate: licensePlate,
+    year: year,
+    color: color
+  }
   try {
-    await carService.createCar(model, licensePlate, year, color)
+    await carService.createCar(car)
     res.sendStatus(httpStatus.CREATED);
   } catch (e) {
     console.log(e);
